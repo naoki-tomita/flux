@@ -1,50 +1,31 @@
-import React, { useState, createContext, FunctionComponent, useContext } from 'react';
-
-function useCounter() {
-  const [count, setCount] = useState<number>(0);
-  return {
-    count,
-    increment: () => setCount(count + 1),
-    decrement: () => setCount(count - 1),
-  };
-}
-
-const CounterContext = createContext<{
-  count: number;
-  increment: () => void;
-  decrement: () => void
-}>({
-  count: 0,
-  increment: () => {},
-  decrement: () => {}
-});
+import React, { FunctionComponent, useContext } from 'react';
+import { StoreProvider, Context } from "./Store"
 
 const Component1: FunctionComponent = () => {
-  const { count, increment } = useContext(CounterContext);
+  const { count, increment } = useContext(Context);
   return (
     <div>
       {count}
-      <button onClick={increment}>+</button>
+      <button onClick={increment}>+++++</button>
     </div>
   );
 }
 
 const Component2: FunctionComponent = () => {
-  const { count, decrement } = useContext(CounterContext);
+  const { count, decrement } = useContext(Context);
   return (
     <div>
       {count}
-      <button onClick={decrement}>-</button>
+      <button onClick={decrement}>-------</button>
     </div>
   );
 }
 
 export const App: FunctionComponent = () => {
-  const counter = useCounter();
   return (
-    <CounterContext.Provider value={counter}>
+    <StoreProvider>
       <Component1 />
       <Component2 />
-    </CounterContext.Provider>
+    </StoreProvider>
   );
 }

@@ -1,12 +1,13 @@
 import React, { FunctionComponent, useContext } from 'react';
 import { StoreProvider, Context } from "./Store"
+import { Button } from "@material-ui/core";
 
 const Component1: FunctionComponent = () => {
   const { count, increment } = useContext(Context);
   return (
     <div>
       {count}
-      <button onClick={increment}>+++++</button>
+      <Button variant="contained" color="primary" onClick={increment}>増やす</Button>
     </div>
   );
 }
@@ -16,7 +17,7 @@ const Component2: FunctionComponent = () => {
   return (
     <div>
       {count}
-      <button onClick={decrement}>-------</button>
+      <Button variant="outlined" color="primary" onClick={decrement}>減らす</Button>
     </div>
   );
 }

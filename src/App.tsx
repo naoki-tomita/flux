@@ -1,32 +1,35 @@
-import React, { FunctionComponent, useContext } from 'react';
-import { StoreProvider, Context } from "./Store"
-import { Button } from "@material-ui/core";
+import React, { FunctionComponent } from 'react';
+import { StoreProvider, useContext, AppType } from "./Store"
+import { Container } from "@material-ui/core";
+import { AppSwitcher } from "./AppSwitcher";
+import { Counter } from "./Counter";
+import { Todo } from "./Todo";
 
-const Component1: FunctionComponent = () => {
-  const { count, increment } = useContext(Context);
-  return (
-    <div>
-      {count}
-      <Button variant="contained" color="primary" onClick={increment}>増やす</Button>
-    </div>
-  );
-}
-
-const Component2: FunctionComponent = () => {
-  const { count, decrement } = useContext(Context);
-  return (
-    <div>
-      {count}
-      <Button variant="outlined" color="primary" onClick={decrement}>減らす</Button>
-    </div>
-  );
+const Switch = ({ state }: { state: AppType }) => {
+  switch (state) {
+    case "counter":
+      return <Counter />
+    case "todo":
+      return <Todo />
+    default:
+      return null;
+  }
 }
 
 export const App: FunctionComponent = () => {
   return (
     <StoreProvider>
-      <Component1 />
-      <Component2 />
+      <InnerApp />
     </StoreProvider>
+  );
+}
+
+const InnerApp: FunctionComponent = () => {
+  const { state } = useContext();
+  return (
+    <Container fixed>
+      <AppSwitcher />
+      <Switch state={state} />
+    </Container>
   );
 }

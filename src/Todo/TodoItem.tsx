@@ -31,7 +31,7 @@ export const TodoItem: FunctionComponent<Props> = ({ onDoneChange, title, descri
     if (!dragging) {
       return;
     }
-    const dx = Math.max(Math.min(x - start, 24), -24);
+    const dx = Math.max(Math.min(x - start, 42), -42);
     ref && (ref.style.left = `${dx}px`);
     move = dx;
   }

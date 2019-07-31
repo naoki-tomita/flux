@@ -22,6 +22,9 @@ export const TodoItem: FunctionComponent<Props> = ({ onDoneChange, title, descri
   const { dragging, remove } = state;
 
   function onDragStart(x: number) {
+    if (!done) {
+      return;
+    }
     move = 0;
     setState({ ...state, dragging: true, start: x });
   }
@@ -58,7 +61,7 @@ export const TodoItem: FunctionComponent<Props> = ({ onDoneChange, title, descri
           left: move,
           transition: dragging ? "": "0.3s"
         }}>
-          <Card raised={!done} style={{ opacity: (done || dragging) ? 0.4: 1 }}>
+          <Card raised={!done} style={{ opacity: done ? 0.4: 1 }}>
             <CardContent
               onMouseDown={e => onDragStart(e.clientX)}
               onTouchStart={e => onDragStart(e.touches.item(0).clientX)}

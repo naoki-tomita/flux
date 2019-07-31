@@ -61,13 +61,12 @@ interface TodoState {
   todos: Todo[];
 }
 
+export type IdOmittedTodo = Omit<Todo, "id">;
 interface TodoActions {
-  add(todo: Todo): void;
+  add(todo: IdOmittedTodo): void;
   remove(id: number): void;
   change(todo: Todo): void;
 }
-
-type IdOmittedTodo = Omit<Todo, "id">;
 
 function useTodo() {
   const [state, setState] = useState<TodoState>(todo);

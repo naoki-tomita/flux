@@ -37,7 +37,7 @@ export const TodoItem: FunctionComponent<Props> = ({ onDoneChange, title, descri
   }
 
   function onDragEnd() {
-    if (Math.abs(move) > 20) {
+    if (Math.abs(move) > 40) {
       setState({ ...state, dragging: false, remove: true });
     } else {
       setState({ ...state, dragging: false });

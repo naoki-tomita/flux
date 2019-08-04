@@ -39,7 +39,6 @@ export const TodoEditDialog: FunctionComponent<Props> = ({ onClose, onSave, open
   }
 
   return (
-    <>
     <Dialog maxWidth="sm" fullWidth onClose={onClose} open={open}>
       <DialogTitle>Todo++</DialogTitle>
       <DialogContent>
@@ -66,6 +65,5 @@ export const TodoEditDialog: FunctionComponent<Props> = ({ onClose, onSave, open
         <Button onClick={onCloseClick}>Cancel</Button>
       </DialogActions>
     </Dialog>
-    </>
   );
 };

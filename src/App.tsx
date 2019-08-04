@@ -25,7 +25,7 @@ export const App: FunctionComponent = () => {
 }
 
 const InnerApp: FunctionComponent = () => {
-  const { state } = useContext();
+  const { app: { state } } = useContext();
   return (
     <Container fixed>
       <AppSwitcher />

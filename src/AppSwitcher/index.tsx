@@ -3,7 +3,7 @@ import { useContext, AppType } from "../Store"
 import { Button, ButtonGroup } from "@material-ui/core";
 
 export const AppSwitcher: FunctionComponent = () => {
-  const { state, switchApp } = useContext();
+  const { app: { state, switchApp } } = useContext();
   function onChange(type: AppType) {
     switchApp(type);
   }

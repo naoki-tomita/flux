@@ -1,9 +1,10 @@
 import React, { createContext, useState, FunctionComponent, useContext as useContextOriginal } from "react";
+import { fetchTodos, createTodo, removeTodo, updateTodo } from "./API";
 
 export type AppType = "counter" | "todo";
 const {
   counter = { count: 0 },
-  todo = { todos: [] },
+  todo = { todos: [], userId: Math.random().toString() },
   app = { state: "counter" }
 } = JSON.parse(localStorage.getItem("state") || "{}")
 
@@ -59,42 +60,71 @@ interface Todo {
 
 interface TodoState {
   todos: Todo[];
+  userId: string;
 }
 
 export type IdOmittedTodo = Omit<Todo, "id">;
 interface TodoActions {
-  add(todo: IdOmittedTodo): void;
+  update(): void;
+  send(todo: IdOmittedTodo): void;
   remove(id: number): void;
   change(todo: Todo): void;
 }
 
-function useTodo() {
+type TodoStore = TodoState & TodoActions;
+function useTodo(): TodoStore {
   const [state, setState] = useState<TodoState>(todo);
-  function add(todo: IdOmittedTodo) {
+
+  async function remove(id: TodoId) {
     const { todos } = state;
-    const id = todos.length === 0 ? 0 : todos[todos.length - 1].id + 1;
-    setState({ ...state, todos: [...todos, { ...todo, id: id }] });
+    setState({ ...state, todos: todos.filter(it => it.id !== id) })
+    await removeTodo(id);
+    update();
   }
 
-  function remove(id: TodoId) {
+  async function change({ id, title, description, done }: Todo) {
     const { todos } = state;
-    setState({ ...state, todos: todos.filter(todo => todo.id !== id) })
+    setState({ ...state, todos: todos.map(it => it.id === id ? { ...it, id, title, description, done }: it) })
+    await updateTodo(id, { title, description, done: done ? "TRUE" : "FALSE" });
+    update();
   }
 
-  function change(todo: Todo) {
-    const { todos } = state;
-    setState({ ...state, todos: todos.map(t => t.id === todo.id ? todo: t) });
+  async function update() {
+    const { userId } = state;
+    const rawTodos = await fetchTodos(userId);
+    setState({
+      ...state,
+      todos: rawTodos
+        .map(({ title, description, done, rowIndex }) => ({
+          id: rowIndex,
+          title, description,
+          done: done === "TRUE"
+        })),
+    });
+  }
+
+  async function send(todo: IdOmittedTodo) {
+    const { userId, todos } = state;
+    setState({ ...state, todos: [...todos, { ...todo, id: 9999 }] })
+    await createTodo({ ...todo, userId });
+    update();
   }
 
   return {
+    userId: state.userId,
     todos: state.todos,
-    add, remove, change,
+    remove, change,
+    update,
+    send,
   };
 }
 
-type TodoStore = TodoState & TodoActions;
 
-type Store = AppStore & CounterStore & TodoStore;
+interface Store {
+  app: AppStore;
+  counter: CounterStore,
+  todo: TodoStore,
+}
 
 export const Context = createContext<Store>({} as any);
 
@@ -104,7 +134,7 @@ export const StoreProvider: FunctionComponent = ({ children }) => {
   const todo = useTodo();
   localStorage.setItem("state", JSON.stringify({ counter, app, todo }));
   return (
-    <Context.Provider value={{ ...counter, ...app, ...todo }}>{children}</Context.Provider>
+    <Context.Provider value={{ counter, app, todo }}>{children}</Context.Provider>
   );
 }
 

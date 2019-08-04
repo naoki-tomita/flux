@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState } from "react";
-import { Card, CardContent, Typography, CardActions, Button, Grid, Switch, Box, FormControlLabel, CardActionArea, Grow } from "@material-ui/core"
+import { Card, CardContent, Typography, Grid, Switch, Box, FormControlLabel, Grow } from "@material-ui/core"
 
 interface Props {
   onDoneChange(done: boolean): void;
@@ -42,6 +42,7 @@ export const TodoItem: FunctionComponent<Props> = ({ onDoneChange, title, descri
   function onDragEnd() {
     if (Math.abs(move) > 40) {
       setState({ ...state, dragging: false, remove: true });
+      onRemove();
     } else {
       setState({ ...state, dragging: false });
     }
@@ -54,7 +55,7 @@ export const TodoItem: FunctionComponent<Props> = ({ onDoneChange, title, descri
   }
 
   return (
-    <Grow enter={false} in={!remove} exit={true} onExited={() => onRemove()}>
+    <Grow enter={false} in={!remove} exit={true}>
       <Box position="relative">
         <div ref={(_ref) => (ref = _ref)} style={{
           position: "relative",

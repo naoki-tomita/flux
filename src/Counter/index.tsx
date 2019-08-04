@@ -15,7 +15,7 @@ const ButtonContainer = styled.div`
 `;
 
 export const Counter: FunctionComponent = () => {
-  const { count, increment, decrement } = useContext();
+  const { counter: { count, increment, decrement } } = useContext();
   return (
     <>
     <FullSizedCount>{count}</FullSizedCount>

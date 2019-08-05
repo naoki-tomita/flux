@@ -4,6 +4,7 @@ import { Container } from "@material-ui/core";
 import { AppSwitcher } from "./AppSwitcher";
 import { Counter } from "./Counter";
 import { Todo } from "./Todo";
+import { Photo } from "./Photo";
 
 const Switch = ({ state }: { state: AppType }) => {
   switch (state) {
@@ -11,6 +12,8 @@ const Switch = ({ state }: { state: AppType }) => {
       return <Counter />
     case "todo":
       return <Todo />
+    case "photo":
+      return <Photo />
     default:
       return null;
   }

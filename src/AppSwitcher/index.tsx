@@ -24,6 +24,11 @@ export const AppSwitcher: FunctionComponent = () => {
         onClick={() => onChange("todo")}>
         Todo
       </Button>
+      <Button
+        disabled={state === "photo"}
+        onClick={() => onChange("photo")}>
+        Photo
+      </Button>
     </ButtonGroup>
     </>
   );

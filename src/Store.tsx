@@ -1,11 +1,14 @@
 import React, { createContext, useState, FunctionComponent, useContext as useContextOriginal } from "react";
-import { fetchTodos, createTodo, removeTodo, updateTodo } from "./API";
+import { fetchTodos, createTodo, removeTodo, updateTodo, googleAuthorizeRequest, googlePhotosAlbums } from "./API";
+import { Query } from "./Utils";
 
-export type AppType = "counter" | "todo";
+export type AppType = "counter" | "todo" | "photo";
 const {
   counter = { count: 0 },
   todo = { todos: [], userId: Math.random().toString() },
-  app = { state: "counter" }
+  app = { state: "counter" },
+  google = { authorized: false, needSaveAccessToken: false, accessTokenExpiresIn: 0 },
+  photo = { albums: [] },
 } = JSON.parse(localStorage.getItem("state") || "{}")
 
 interface AppState {
@@ -119,11 +122,88 @@ function useTodo(): TodoStore {
   };
 }
 
+interface GoogleState {
+  accessToken?: string;
+  accessTokenExpiresIn: number;
+  authorized: boolean;
+  needSaveAccessToken: boolean;
+}
+
+interface GoogleActions {
+  requestAuthorization(): void;
+  saveAccessToken(): void;
+}
+
+type GoogleStore = GoogleState & GoogleActions;
+
+function useGoogle(): GoogleStore {
+  const [state, setState] = useState<Omit<Omit<GoogleState, "authorized">, "needSaveAccessToken">>(google);
+
+  function requestAuthorization() {
+    googleAuthorizeRequest();
+  }
+
+  function saveAccessToken() {
+    const { error, access_token: accessToken, expires_in: expiresIn } = Query.parse(window.location.hash.substr(1));
+    if (error) {
+      return;
+    }
+    setState({ ...state, accessToken, accessTokenExpiresIn: Date.now() + (parseInt(expiresIn, 10) * 1000)});
+  }
+
+  const { accessToken, accessTokenExpiresIn } = state;
+  const token = accessTokenExpiresIn > Date.now() ? accessToken : undefined;
+  return {
+    accessToken: token,
+    accessTokenExpiresIn,
+    authorized: !!token,
+    needSaveAccessToken: !!window.location.hash,
+    requestAuthorization,
+    saveAccessToken,
+  };
+}
+
+interface PhotoAlbum {
+  id: string;
+  title: string;
+  url: string;
+  size: number;
+  coverUrl: string;
+}
+
+interface PhotoState {
+  albums: PhotoAlbum[];
+}
+
+interface PhotoActions {
+  update(accessToken: string): void;
+}
+
+type PhotoStore = PhotoState & PhotoActions;
+
+function usePhoto(): PhotoStore {
+  const [state, setState] = useState<PhotoState>(photo);
+
+  async function update(accessToken: string) {
+    const { albums } = await googlePhotosAlbums(accessToken);
+    setState({
+      ...state,
+      albums: albums
+        .map(({ id, title, productUrl, mediaItemsCount, coverPhotoBaseUrl, coverPhotoMediaItemId }) =>
+          ({ id, title, url: productUrl, size: parseInt(mediaItemsCount, 10), coverUrl: coverPhotoBaseUrl })),
+    });
+  }
+
+  const { albums } = state;
+  return { update, albums };
+}
 
 interface Store {
   app: AppStore;
-  counter: CounterStore,
-  todo: TodoStore,
+  counter: CounterStore;
+  todo: TodoStore;
+  google: GoogleStore;
+  photo: PhotoStore;
 }
 
 export const Context = createContext<Store>({} as any);
@@ -132,9 +212,11 @@ export const StoreProvider: FunctionComponent = ({ children }) => {
   const counter = useCounter();
   const app = useApp();
   const todo = useTodo();
-  localStorage.setItem("state", JSON.stringify({ counter, app, todo }));
+  const google = useGoogle();
+  const photo = usePhoto();
+  localStorage.setItem("state", JSON.stringify({ counter, app, todo, google, photo }));
   return (
-    <Context.Provider value={{ counter, app, todo }}>{children}</Context.Provider>
+    <Context.Provider value={{ counter, app, todo, google, photo }}>{children}</Context.Provider>
   );
 }
 

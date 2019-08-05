@@ -8,8 +8,8 @@ export const Photo: FunctionComponent = () => {
   const { google: { authorized, accessToken }, photo: { albums, update } } = useContext();
 
   useEffect(() => {
-    update(accessToken!);
-  }, []);
+    authorized && update(accessToken!);
+  }, [authorized]);
 
   if (!authorized) {
     return <OAuth />
@@ -17,12 +17,13 @@ export const Photo: FunctionComponent = () => {
 
   return (
     <>
-    <Box marginTop="24px"/>
+    <Box marginTop="24px" display="flex" flexWrap="wrap" justifyContent="space-between" alignContent="start">
     {albums.map(({ id, title, coverUrl, url }) =>
       <Box key={id} marginBottom="12px">
         <AlbumThumbnail title={title} coverUrl={coverUrl} url={url} />
       </Box>
     )}
+    </Box>
     </>
   );
 }

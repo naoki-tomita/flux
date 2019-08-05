@@ -149,6 +149,7 @@ function useGoogle(): GoogleStore {
       return;
     }
     setState({ ...state, accessToken, accessTokenExpiresIn: Date.now() + (parseInt(expiresIn, 10) * 1000)});
+    window.location.hash = "";
   }
 
   const { accessToken, accessTokenExpiresIn } = state;

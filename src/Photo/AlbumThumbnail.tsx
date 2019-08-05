@@ -14,7 +14,8 @@ export const AlbumThumbnail: FunctionComponent<Props> = ({ coverUrl, title, url 
       <CardActionArea href={url}>
         <CardMedia
           component="img"
-          height="320"
+          width="240"
+          height="240"
           image={coverUrl}
           title={title}
         />

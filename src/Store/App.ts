@@ -11,7 +11,7 @@ interface AppActions {
 
 export type AppStore = AppState & AppActions;
 
-export function useApp(initialState: AppState) {
+export function useApp(initialState: AppState = { state: "counter" }) {
   const [state, setState] = useState<AppState>(initialState);
   function switchApp(type: AppType) {
     setState({ ...state, state: type });

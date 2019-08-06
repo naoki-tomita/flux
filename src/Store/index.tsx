@@ -8,17 +8,15 @@ import { PhotoStore, usePhoto } from "./Photo";
 import { AppStore, useApp } from "./App";
 import { TodoStore, useTodo } from "./Todo";
 import { useCounter, CounterStore } from "./Counter";
+import { SettingStore, useSetting } from "./Setting";
 
 const {
-  counter = { count: 0 },
-  todo = { todos: [], userId: Math.random().toString() },
-  app = { state: "counter" },
-  google = {
-    authorized: false,
-    needSaveAccessToken: false,
-    accessTokenExpiresIn: 0
-  },
-  photo = { albums: [] }
+  counter,
+  todo,
+  app,
+  google,
+  photo,
+  setting,
 } = JSON.parse(localStorage.getItem("state") || "{}");
 
 interface Store {
@@ -27,6 +25,7 @@ interface Store {
   todo: TodoStore;
   google: GoogleStore;
   photo: PhotoStore;
+  setting: SettingStore;
 }
 
 export const Context = createContext<Store>({} as any);
@@ -37,6 +36,7 @@ export const StoreProvider: FunctionComponent = ({ children }) => {
   const todoStore = useTodo(todo);
   const googleStore = useGoogle(google);
   const photoStore = usePhoto(photo);
+  const settingStore = useSetting(setting);
   localStorage.setItem(
     "state",
     JSON.stringify({
@@ -44,7 +44,8 @@ export const StoreProvider: FunctionComponent = ({ children }) => {
       app: appStore,
       todo: todoStore,
       google: googleStore,
-      photo: photoStore
+      photo: photoStore,
+      setting: settingStore,
     })
   );
   return (
@@ -54,7 +55,8 @@ export const StoreProvider: FunctionComponent = ({ children }) => {
         app: appStore,
         todo: todoStore,
         google: googleStore,
-        photo: photoStore
+        photo: photoStore,
+        setting: settingStore,
       }}
     >
       {children}

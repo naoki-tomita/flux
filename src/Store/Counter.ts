@@ -11,7 +11,7 @@ interface CounterActions {
 
 export type CounterStore = CounterState & CounterActions;
 
-export function useCounter(initialState: CounterState) {
+export function useCounter(initialState: CounterState = { count: 0 }) {
   const [state, setCount] = useState<CounterState>(initialState);
   return {
     count: state.count,

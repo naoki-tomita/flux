@@ -2,6 +2,11 @@ import { useState } from "react";
 import { googleAuthorizeRequest } from "../API";
 import { Query } from "../Utils";
 
+interface GoogleInternalState {
+  accessToken?: string;
+  accessTokenExpiresIn: number;
+}
+
 interface GoogleState {
   accessToken?: string;
   accessTokenExpiresIn: number;
@@ -16,10 +21,8 @@ interface GoogleActions {
 
 export type GoogleStore = GoogleState & GoogleActions;
 
-export function useGoogle(initialState: GoogleState): GoogleStore {
-  const [state, setState] = useState<
-    Omit<Omit<GoogleState, "authorized">, "needSaveAccessToken">
-  >(initialState);
+export function useGoogle(initialState: GoogleInternalState = { accessTokenExpiresIn: 0 }): GoogleStore {
+  const [state, setState] = useState<GoogleInternalState>(initialState);
 
   function requestAuthorization() {
     googleAuthorizeRequest();

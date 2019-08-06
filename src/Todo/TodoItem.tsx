@@ -1,5 +1,14 @@
 import React, { FunctionComponent, useState } from "react";
-import { Card, CardContent, Typography, Grid, Switch, Box, FormControlLabel, Grow } from "@material-ui/core"
+import {
+  Card,
+  CardContent,
+  Typography,
+  Grid,
+  Switch,
+  Box,
+  FormControlLabel,
+  Grow
+} from "@material-ui/core";
 
 interface Props {
   onDoneChange(done: boolean): void;
@@ -15,10 +24,20 @@ interface State {
   remove: boolean;
 }
 
-export const TodoItem: FunctionComponent<Props> = ({ onDoneChange, title, description, done, onRemove }) => {
+export const TodoItem: FunctionComponent<Props> = ({
+  onDoneChange,
+  title,
+  description,
+  done,
+  onRemove
+}) => {
   let move = 0;
   let ref: HTMLDivElement | null;
-  const [state, setState] = useState<State>({ dragging: false, start: 0, remove: false });
+  const [state, setState] = useState<State>({
+    dragging: false,
+    start: 0,
+    remove: false
+  });
   const { dragging, remove } = state;
 
   function onDragStart(x: number) {
@@ -57,12 +76,15 @@ export const TodoItem: FunctionComponent<Props> = ({ onDoneChange, title, descri
   return (
     <Grow enter={false} in={!remove} exit={true}>
       <Box position="relative">
-        <div ref={(_ref) => (ref = _ref)} style={{
-          position: "relative",
-          left: move,
-          transition: dragging ? "": "0.3s"
-        }}>
-          <Card raised={!done} style={{ opacity: done ? 0.4: 1 }}>
+        <div
+          ref={_ref => (ref = _ref)}
+          style={{
+            position: "relative",
+            left: move,
+            transition: dragging ? "" : "0.3s"
+          }}
+        >
+          <Card raised={!done} style={{ opacity: done ? 0.4 : 1 }}>
             <CardContent
               onMouseDown={e => onDragStart(e.clientX)}
               onTouchStart={e => onDragStart(e.touches.item(0).clientX)}
@@ -76,10 +98,23 @@ export const TodoItem: FunctionComponent<Props> = ({ onDoneChange, title, descri
               <Grid container spacing={2}>
                 <Grid item xs={9}>
                   <Typography variant="h5">{title}</Typography>
-                  {description.split("\n").map((line, i) => <Typography key={i} variant="body2">{line}</Typography>)}
+                  {description.split("\n").map((line, i) => (
+                    <Typography key={i} variant="body2">
+                      {line}
+                    </Typography>
+                  ))}
                 </Grid>
-                <Grid item xs={3} style={{ borderLeft: "1px solid rgba(0, 0, 0, 0.12)" }}>
-                  <Box display="flex" justifyContent="center" alignItems="center" height="100%">
+                <Grid
+                  item
+                  xs={3}
+                  style={{ borderLeft: "1px solid rgba(0, 0, 0, 0.12)" }}
+                >
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    height="100%"
+                  >
                     <FormControlLabel
                       value="top"
                       control={
@@ -87,7 +122,7 @@ export const TodoItem: FunctionComponent<Props> = ({ onDoneChange, title, descri
                           checked={done}
                           onChange={(_, done) => onDoneChange(done)}
                           value="checkedA"
-                          inputProps={{ 'aria-label': 'secondary checkbox' }}
+                          inputProps={{ "aria-label": "secondary checkbox" }}
                         />
                       }
                       label="DONE"
@@ -103,4 +138,4 @@ export const TodoItem: FunctionComponent<Props> = ({ onDoneChange, title, descri
       </Box>
     </Grow>
   );
-}
+};

@@ -1,5 +1,5 @@
-import React, { FunctionComponent } from 'react';
-import { useContext } from "../Store"
+import React, { FunctionComponent } from "react";
+import { useContext } from "../Store";
 import { Fab } from "@material-ui/core";
 import styled from "styled-components";
 import { Add, Remove } from "@material-ui/icons";
@@ -15,18 +15,32 @@ const ButtonContainer = styled.div`
 `;
 
 export const Counter: FunctionComponent = () => {
-  const { counter: { count, increment, decrement } } = useContext();
+  const {
+    counter: { count, increment, decrement }
+  } = useContext();
   return (
     <>
-    <FullSizedCount>{count}</FullSizedCount>
-    <ButtonContainer>
-      <Fab variant="extended" color="primary" size="large" onClick={increment}>
-        <Add />Count-up
-      </Fab>
-      <Fab variant="extended" color="secondary" size="large" onClick={decrement}>
-        <Remove />Count-down
-      </Fab>
-    </ButtonContainer>
+      <FullSizedCount>{count}</FullSizedCount>
+      <ButtonContainer>
+        <Fab
+          variant="extended"
+          color="primary"
+          size="large"
+          onClick={increment}
+        >
+          <Add />
+          Count-up
+        </Fab>
+        <Fab
+          variant="extended"
+          color="secondary"
+          size="large"
+          onClick={decrement}
+        >
+          <Remove />
+          Count-down
+        </Fab>
+      </ButtonContainer>
     </>
   );
-}
+};

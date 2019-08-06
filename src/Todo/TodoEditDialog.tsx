@@ -1,6 +1,14 @@
 import React, { FunctionComponent, useState } from "react";
-import { Dialog, DialogTitle, DialogContent, Box, TextField, DialogActions, Button } from "@material-ui/core"
-import { IdOmittedTodo } from "../Store";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Box,
+  TextField,
+  DialogActions,
+  Button
+} from "@material-ui/core";
+import { IdOmittedTodo } from "../Store/Todo";
 
 interface State {
   title: string;
@@ -13,7 +21,11 @@ interface Props {
   open: boolean;
 }
 
-export const TodoEditDialog: FunctionComponent<Props> = ({ onClose, onSave, open }) => {
+export const TodoEditDialog: FunctionComponent<Props> = ({
+  onClose,
+  onSave,
+  open
+}) => {
   const [state, setState] = useState<State>({ title: "", description: "" });
   const { title, description } = state;
   function onTitleChange(title: string) {
@@ -42,23 +54,23 @@ export const TodoEditDialog: FunctionComponent<Props> = ({ onClose, onSave, open
     <Dialog maxWidth="sm" fullWidth onClose={onClose} open={open}>
       <DialogTitle>Todo++</DialogTitle>
       <DialogContent>
-      <Box marginBottom="8px">
-        <TextField
-          value={title}
-          onChange={e => onTitleChange(e.target.value)}
-          label="Title"
-          fullWidth
-        />
-      </Box>
-      <Box>
-        <TextField
-          value={description}
-          onChange={e => onDescriptionChange(e.target.value)}
-          label="Description"
-          multiline
-          fullWidth
-        />
-      </Box>
+        <Box marginBottom="8px">
+          <TextField
+            value={title}
+            onChange={e => onTitleChange(e.target.value)}
+            label="Title"
+            fullWidth
+          />
+        </Box>
+        <Box>
+          <TextField
+            value={description}
+            onChange={e => onDescriptionChange(e.target.value)}
+            label="Description"
+            multiline
+            fullWidth
+          />
+        </Box>
       </DialogContent>
       <DialogActions>
         <Button onClick={onSaveClick}>Save</Button>

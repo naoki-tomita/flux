@@ -6,7 +6,7 @@ describe("Utils", () => {
       const tests = [
         {
           input: "foo=bar&hoge=fuga",
-          expected: { foo: "bar", "hoge": "fuga" },
+          expected: { foo: "bar", hoge: "fuga" }
         }
       ];
       tests.forEach(({ input, expected }) => {
@@ -20,7 +20,7 @@ describe("Utils", () => {
       const tests = [
         {
           input: {},
-          expected: "",
+          expected: ""
         },
         {
           input: {
@@ -31,7 +31,7 @@ describe("Utils", () => {
         {
           input: {
             foo: "bar",
-            hoge: "fuga",
+            hoge: "fuga"
           },
           expected: "foo=bar&hoge=fuga"
         }

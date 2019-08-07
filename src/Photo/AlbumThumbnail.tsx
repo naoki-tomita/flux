@@ -22,7 +22,12 @@ export const AlbumThumbnail: FunctionComponent<Props> = ({
     <>
       <Card>
         <CardActionArea href={url}>
-          <CardMedia component="img" image={coverUrl} title={title} />
+          <CardMedia
+            component="img"
+            image={coverUrl}
+            title={title}
+            height="300"
+          />
           <CardContent>
             <Typography gutterBottom variant="h5" component="h2">
               {title}

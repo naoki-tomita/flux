@@ -92,7 +92,7 @@ interface GoogleAlbam {
 
 export async function googlePhotosAlbums(
   accessToken: string
-): Promise<{ albums: GoogleAlbam[] }> {
+): Promise<{ albums: GoogleAlbam[]; nextPageToken?: string }> {
   const response = await fetch(
     `https://photoslibrary.googleapis.com/v1/albums`,
     { headers: { authorization: `Bearer ${accessToken}` } }

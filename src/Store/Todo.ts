@@ -23,7 +23,12 @@ interface TodoActions {
 }
 
 export type TodoStore = TodoState & TodoActions;
-export function useTodo({ todos, userId = Math.random().toString() }: TodoState = { todos: [], userId: Math.random().toString() }): TodoStore {
+export function useTodo(
+  { todos, userId = Math.random().toString() }: TodoState = {
+    todos: [],
+    userId: Math.random().toString()
+  }
+): TodoStore {
   const [state, setState] = useState<TodoState>({ todos, userId });
 
   async function remove(id: TodoId) {

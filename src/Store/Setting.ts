@@ -1,6 +1,4 @@
-interface SettingState {
-
-}
+interface SettingState {}
 
 interface SettingActions {
   reset(): void;
@@ -15,6 +13,6 @@ export function useSetting(initialState: SettingState): SettingStore {
   }
 
   return {
-    reset,
+    reset
   };
 }

@@ -10,14 +10,9 @@ import { TodoStore, useTodo } from "./Todo";
 import { useCounter, CounterStore } from "./Counter";
 import { SettingStore, useSetting } from "./Setting";
 
-const {
-  counter,
-  todo,
-  app,
-  google,
-  photo,
-  setting,
-} = JSON.parse(localStorage.getItem("state") || "{}");
+const { counter, todo, app, google, photo, setting } = JSON.parse(
+  localStorage.getItem("state") || "{}"
+);
 
 interface Store {
   app: AppStore;
@@ -45,7 +40,7 @@ export const StoreProvider: FunctionComponent = ({ children }) => {
       todo: todoStore,
       google: googleStore,
       photo: photoStore,
-      setting: settingStore,
+      setting: settingStore
     })
   );
   return (
@@ -56,7 +51,7 @@ export const StoreProvider: FunctionComponent = ({ children }) => {
         todo: todoStore,
         google: googleStore,
         photo: photoStore,
-        setting: settingStore,
+        setting: settingStore
       }}
     >
       {children}

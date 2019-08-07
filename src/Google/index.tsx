@@ -7,6 +7,7 @@ export const OAuth: FunctionComponent = () => {
   } = useContext();
   useEffect(() => {
     !needSaveAccessToken ? requestAuthorization() : saveAccessToken();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return <></>;
 };

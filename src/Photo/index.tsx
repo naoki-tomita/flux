@@ -12,7 +12,8 @@ export const Photo: FunctionComponent = () => {
 
   useEffect(() => {
     authorized && update(accessToken!);
-  }, [authorized]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (!authorized) {
     return <OAuth />;

@@ -21,7 +21,9 @@ interface GoogleActions {
 
 export type GoogleStore = GoogleState & GoogleActions;
 
-export function useGoogle(initialState: GoogleInternalState = { accessTokenExpiresIn: 0 }): GoogleStore {
+export function useGoogle(
+  initialState: GoogleInternalState = { accessTokenExpiresIn: 0 }
+): GoogleStore {
   const [state, setState] = useState<GoogleInternalState>(initialState);
 
   function requestAuthorization() {

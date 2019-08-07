@@ -19,7 +19,9 @@ interface PhotoActions {
 
 export type PhotoStore = PhotoState & PhotoActions;
 
-export function usePhoto(initialState: PhotoState = { albums: [] }): PhotoStore {
+export function usePhoto(
+  initialState: PhotoState = { albums: [] }
+): PhotoStore {
   const [state, setState] = useState<PhotoState>(initialState);
 
   async function update(accessToken: string) {
@@ -27,13 +29,7 @@ export function usePhoto(initialState: PhotoState = { albums: [] }): PhotoStore 
     setState({
       ...state,
       albums: albums.map(
-        ({
-          id,
-          title,
-          productUrl,
-          mediaItemsCount,
-          coverPhotoBaseUrl,
-        }) => ({
+        ({ id, title, productUrl, mediaItemsCount, coverPhotoBaseUrl }) => ({
           id,
           title,
           url: productUrl,

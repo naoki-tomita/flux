@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState, useEffect } from "react";
-import { Fab, Container, Box } from "@material-ui/core";
+import { Fab, Box } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
 import { useContext } from "../Store";
 import { TodoEditDialog } from "./TodoEditDialog";
@@ -15,9 +15,9 @@ export const Todo: FunctionComponent = () => {
   const {
     todo: { todos, change, remove, update, send }
   } = useContext();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     update();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const { open } = state;
@@ -37,24 +37,22 @@ export const Todo: FunctionComponent = () => {
 
   return (
     <>
-      <Container fixed>
-        <Box marginBottom="20px" />
-        {todos.map(todo => (
-          <Box marginBottom="12px" key={todo.id}>
-            <TodoItem
-              {...todo}
-              onDoneChange={done => change({ ...todo, done })}
-              onRemove={() => remove(todo.id)}
-            />
-          </Box>
-        ))}
-        <Box marginBottom="20px" />
-        <Box display="flex" justifyContent="center" marginBottom="12px">
-          <Fab onClick={onOpen}>
-            <Add />
-          </Fab>
+      <Box marginBottom="20px" />
+      {todos.map(todo => (
+        <Box marginBottom="12px" key={todo.id}>
+          <TodoItem
+            {...todo}
+            onDoneChange={done => change({ ...todo, done })}
+            onRemove={() => remove(todo.id)}
+          />
         </Box>
-      </Container>
+      ))}
+      <Box marginBottom="20px" />
+      <Box display="flex" justifyContent="center" marginBottom="12px">
+        <Fab onClick={onOpen}>
+          <Add />
+        </Fab>
+      </Box>
       <TodoEditDialog
         onClose={onClose}
         onSave={onSave}

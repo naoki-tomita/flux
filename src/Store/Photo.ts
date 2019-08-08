@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { googlePhotosAlbums } from "../API";
+import { googlePhotosAlbums, GoogleAlbum } from "../API";
 
 interface PhotoAlbum {
   id: string;
@@ -9,37 +9,65 @@ interface PhotoAlbum {
   coverUrl: string;
 }
 
+interface InnerState {
+  albums: PhotoAlbum[];
+  nextPageToken?: string;
+}
+
 interface PhotoState {
   albums: PhotoAlbum[];
+  hasNext: boolean;
 }
 
 interface PhotoActions {
-  update(accessToken: string): void;
+  first(accessToken: string): void;
+  next(accessToken: string): void;
 }
 
 export type PhotoStore = PhotoState & PhotoActions;
 
 export function usePhoto(
-  initialState: PhotoState = { albums: [] }
+  initialState: InnerState = { albums: [], nextPageToken: undefined }
 ): PhotoStore {
-  const [state, setState] = useState<PhotoState>(initialState);
+  const [state, setState] = useState<InnerState>(initialState);
 
-  async function update(accessToken: string) {
-    const { albums } = await googlePhotosAlbums(accessToken);
+  function convert({
+    id,
+    title,
+    productUrl,
+    mediaItemsCount,
+    coverPhotoBaseUrl
+  }: GoogleAlbum): PhotoAlbum {
+    return {
+      id,
+      title,
+      url: productUrl,
+      size: parseInt(mediaItemsCount, 10),
+      coverUrl: coverPhotoBaseUrl
+    };
+  }
+
+  async function first(accessToken: string) {
+    const { albums, nextPageToken } = await googlePhotosAlbums(accessToken);
     setState({
       ...state,
-      albums: albums.map(
-        ({ id, title, productUrl, mediaItemsCount, coverPhotoBaseUrl }) => ({
-          id,
-          title,
-          url: productUrl,
-          size: parseInt(mediaItemsCount, 10),
-          coverUrl: coverPhotoBaseUrl
-        })
-      )
+      albums: albums.map(convert),
+      nextPageToken
     });
   }
 
-  const { albums } = state;
-  return { update, albums };
+  async function next(accessToken: string) {
+    const { albums, nextPageToken } = await googlePhotosAlbums(
+      accessToken,
+      state.nextPageToken
+    );
+    setState({
+      ...state,
+      albums: [...state.albums, ...albums.map(convert)],
+      nextPageToken
+    });
+  }
+
+  const { albums, nextPageToken } = state;
+  return { first, albums, hasNext: !!nextPageToken, next };
 }

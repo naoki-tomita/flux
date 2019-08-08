@@ -80,7 +80,7 @@ export async function googleAuthorizeRequest() {
   )}`;
 }
 
-interface GoogleAlbam {
+export interface GoogleAlbum {
   id: string;
   title: string;
   productUrl: string;
@@ -91,10 +91,13 @@ interface GoogleAlbam {
 }
 
 export async function googlePhotosAlbums(
-  accessToken: string
-): Promise<{ albums: GoogleAlbam[]; nextPageToken?: string }> {
+  accessToken: string,
+  pageToken?: string
+): Promise<{ albums: GoogleAlbum[]; nextPageToken?: string }> {
   const response = await fetch(
-    `https://photoslibrary.googleapis.com/v1/albums`,
+    `https://photoslibrary.googleapis.com/v1/albums${
+      pageToken ? `?${Query.stringify({ pageToken })}` : ""
+    }`,
     { headers: { authorization: `Bearer ${accessToken}` } }
   );
   if (response.ok) {

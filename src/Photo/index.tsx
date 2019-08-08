@@ -9,11 +9,11 @@ import { FillGrid } from "../Components/FillGrid";
 export const Photo: FunctionComponent = () => {
   const {
     google: { authorized, accessToken },
-    photo: { albums, update,  }
+    photo: { albums, first, hasNext, next }
   } = useContext();
 
   useEffect(() => {
-    authorized && update(accessToken!);
+    authorized && first(accessToken!);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -23,16 +23,25 @@ export const Photo: FunctionComponent = () => {
 
   return (
     <Box marginTop="24px" marginBottom="24px">
-    <InfiniteScroller pageStart={0} loader={<Box display="flex" justifyContent="center"><CircularProgress /></Box>} hasMore={false} loadMore={() => console.log("load more")}>
-      <FillGrid
-        items={albums}
-        render={({ id, title, coverUrl, url }) => (
-          <Grid key={id} item xs>
-            <AlbumThumbnail title={title} coverUrl={coverUrl} url={url} />
-          </Grid>
-        )}
-      />
-    </InfiniteScroller>
+      <InfiniteScroller
+        pageStart={0}
+        hasMore={hasNext}
+        loadMore={() => next(accessToken!)}
+        loader={
+          <Box key={0} marginTop="12px" display="flex" justifyContent="center">
+            <CircularProgress />
+          </Box>
+        }
+      >
+        <FillGrid
+          items={albums}
+          render={({ id, title, coverUrl, url }) => (
+            <Grid key={id} item xs>
+              <AlbumThumbnail title={title} coverUrl={coverUrl} url={url} />
+            </Grid>
+          )}
+        />
+      </InfiniteScroller>
     </Box>
   );
 };
